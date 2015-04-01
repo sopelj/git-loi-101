@@ -52,7 +52,8 @@ french_to_english_args = {
     'tête': 'head',
 }
 
-parser = argparse.ArgumentParser(description='Wrapper de Git en français')
+parser = argparse.ArgumentParser(description='Wrapper de Git en français', add_help=False)
+parser.add_argument('--aide', '-a', action="help")
 
 subparsers = parser.add_subparsers(dest="commandes")
 
