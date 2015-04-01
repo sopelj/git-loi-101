@@ -5,9 +5,11 @@ Requirements:
 * Python 3
 
 Installation:
-git clone git@github.com:sopelj/git-loi-101.git
-cd git-loi-101
-sudo cp git-loi-101.py /usr/bin/git-loi-101
+
+git clone https://github.com/sopelj/git-loi-101.git
+
+sudo cp git-loi-101/git-loi-101.py /usr/bin/git-loi-101
+
 sudo chmod 755 /usr/bin/git-loi-101
 
 Usage:
