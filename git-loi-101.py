@@ -7,9 +7,9 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
-import locale
+# import locale
 import sys
-from subprocess import call
+from subprocess import call, Popen, PIPE, STDOUT
 from six import iteritems
 
 # locale.setlocale(locale.LC_ALL, 'fr_FR.UTF-8')
@@ -30,7 +30,7 @@ french_to_english = {
     'commettre': 'commit',
     'fusion': 'merge',
     'outil-fusion': 'mergetool',
-    'outil-des-différences': 'difftool',
+    'outil-de-différences': 'difftool',
     'cueillette-de-cerise': 'cherry-pick',
     'ajouter': 'add',
     'enlever': 'rm',
@@ -45,6 +45,7 @@ french_to_english_flags = {
     'dur': 'hard',
     'courge': 'squash',
     'oblige': 'force',
+    'récursive': 'r',
 }
 
 french_to_english_args = {
@@ -97,7 +98,7 @@ branch.add_argument(
 # Git diff
 diff = subparsers.add_parser('différence', help="Compare deux branches")
 diff_tool = subparsers.add_parser(
-    'outil-des-différences', help="Compare deux branches"
+    'outil-de-différences', help="Compare deux branches"
 )
 
 init = subparsers.add_parser(
@@ -120,22 +121,34 @@ commit = subparsers.add_parser('commettre', help="")
 
 merge = subparsers.add_parser('fusion')
 merge.add_argument(
-    '--courge', '-c', action='store_true', help="Combiner les commettres ensemble"
+    '--courge', '-c', action='store_true', help="Fusionner les commit ensemble."
 )
 
-merge_tool = subparsers.add_parser('outil-fusion')
+merge_tool = subparsers.add_parser('outil-fusion', help="Gérer les conflits de fusion avec une interface graphique.")
 
 # Git Cherry-Pick
-cherry_pick = subparsers.add_parser('cueillette-de-cerise')
+cherry_pick = subparsers.add_parser('cueillette-de-cerise', help="Prendre un commis en particulier et l'amener dans la branche actuelle.")
 
 add = subparsers.add_parser('ajouter')
 add.add_argument(
-    'fichiers', nargs='+', help="Le ou les fichiers", metavar="FICHIERS"
+    'fichiers', nargs='+', help="Le ou les fichiers à ajouter", metavar="FICHIERS"
+)
+add.add_argument(
+    '--oblige', '-o', action='store_true', help="Oblige l'ajout de(s) fichier(s)"
 )
 
 rm = subparsers.add_parser('enlever')
+rm.add_argument(
+    'fichiers', nargs='+', help="Le ou les fichiers à supprimer", metavar="FICHIERS"
+)
+rm.add_argument(
+    '--oblige', '-o', action='store_true', help="Oblige le suppression de(s) fichier(s)"
+)
+rm.add_argument(
+    '--récursive', '-r', action='store_true', help="Fais la suppression de manière récursive"
+)
 
-rebase = subparsers.add_parser('refonte')
+rebase = subparsers.add_parser('refonte', help="Mettre à jour l'historique des commis avec une autre branche")
 fetch = subparsers.add_parser('rapporter')
 fetch.add_argument(
     '--pruneau', '-p', action='store_true', help="Enlever les branches supprimer"
@@ -159,7 +172,10 @@ for key, value in iteritems(args):
     if value is True or value is False:
         flag = french_to_english_flags.get(key)
         if flag:
-            value = "--" + flag
+            if len(flag) == 1:
+                value = "-" + flag
+            else:
+                value = "--" + flag
 
     if isinstance(value, list):
         if value:
@@ -172,4 +188,30 @@ for key, value in iteritems(args):
 
         git_arguments.append(value)
 
-call(git_arguments + unknown_args)
+all_args = git_arguments + unknown_args
+
+interactive_commands = [
+    'commit', 'merge', 'diff'
+]
+
+if command in interactive_commands:
+    exit_code = call(all_args)
+    sys.exit(exit_code)
+
+cmd = None
+try:
+    cmd = Popen(" ".join(all_args), stdout=PIPE, stderr=STDOUT, shell=True)
+    status_code = cmd.wait()
+    while True:
+        line = cmd.stdout.readline()
+        if not line:
+            break
+        print(line.decode("utf-8"), end='')
+
+    if status_code != 0:
+        print("Un erreur est survenu")
+        sys.exit(1)
+
+except KeyboardInterrupt:
+    if cmd:
+        cmd.kill()
