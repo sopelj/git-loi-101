@@ -120,7 +120,7 @@ commit = subparsers.add_parser('commettre', help="")
 
 merge = subparsers.add_parser('fusion')
 merge.add_argument(
-    '--courge', '-c', action='store_true', help="Combiner les commettres ensemble"
+    '--écraser', '-c', action='store_true', help="Combiner les commettres ensemble"
 )
 
 merge_tool = subparsers.add_parser('outil-fusion')
@@ -138,7 +138,7 @@ rm = subparsers.add_parser('enlever')
 rebase = subparsers.add_parser('refonte')
 fetch = subparsers.add_parser('rapporter')
 fetch.add_argument(
-    '--pruneau', '-p', action='store_true', help="Enlever les branches supprimer"
+    '--émonder', '-p', action='store_true', help="Enlever les branches supprimer"
 )
 
 args, unknown_args = parser.parse_known_args()
