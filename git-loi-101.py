@@ -41,14 +41,14 @@ french_to_english = {
 
 french_to_english_flags = {
     'tout': 'all',
-    'pruneau': 'prune',
+    'émonder': 'prune',
     'dur': 'hard',
-    'courge': 'squash',
+    'écraser': 'squash',
     'oblige': 'force',
 }
 
 french_to_english_args = {
-    'maître': 'head',
+    'maître': 'master',
     'tête': 'head',
 }
 
