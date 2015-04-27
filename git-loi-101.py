@@ -1,5 +1,6 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
+# PYTHON_ARGCOMPLETE_OK
 """
     Usage: git-loi-101.py [--aide] COMMANDE [OPTIONS]
 """
@@ -11,6 +12,12 @@ import argparse
 import sys
 from subprocess import call, Popen, PIPE, STDOUT
 from six import iteritems
+
+try:
+    from argcomplete import autocomplete
+    autocomplete_installed = True
+except ImportError:
+    autocomplete_installed = False
 
 # locale.setlocale(locale.LC_ALL, 'fr_FR.UTF-8')
 
@@ -49,7 +56,7 @@ french_to_english_flags = {
 }
 
 french_to_english_args = {
-    'maître': 'head',
+    'maître': 'master',
     'tête': 'head',
 }
 
@@ -153,6 +160,9 @@ fetch = subparsers.add_parser('rapporter')
 fetch.add_argument(
     '--pruneau', '-p', action='store_true', help="Enlever les branches supprimer"
 )
+
+if autocomplete_installed:
+    autocomplete(parser)
 
 args, unknown_args = parser.parse_known_args()
 
