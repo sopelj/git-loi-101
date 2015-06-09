@@ -37,7 +37,7 @@ french_to_english = {
     'commettre': 'commit',
     'fusion': 'merge',
     'outil-fusion': 'mergetool',
-    'outil-de-différences': 'difftool',
+    'outil-des-différences': 'difftool',
     'cueillette-de-cerise': 'cherry-pick',
     'ajouter': 'add',
     'enlever': 'rm',
@@ -49,8 +49,10 @@ french_to_english = {
 french_to_english_flags = {
     'tout': 'all',
     'pruneau': 'prune',
+    'émonder': 'prune',
     'dur': 'hard',
     'courge': 'squash',
+    'écraser': 'squash',
     'oblige': 'force',
     'récursive': 'r',
 }
@@ -105,7 +107,7 @@ branch.add_argument(
 # Git diff
 diff = subparsers.add_parser('différence', help="Compare deux branches")
 diff_tool = subparsers.add_parser(
-    'outil-de-différences', help="Compare deux branches"
+    'outil-des-différences', help="Compare deux branches"
 )
 
 init = subparsers.add_parser(
@@ -130,6 +132,10 @@ merge = subparsers.add_parser('fusion')
 merge.add_argument(
     '--courge', '-c', action='store_true', help="Fusionner les commit ensemble."
 )
+merge.add_argument(
+    '--écraser', '-e', action='store_true', help="Combiner les commettres ensemble"
+)
+
 
 merge_tool = subparsers.add_parser('outil-fusion', help="Gérer les conflits de fusion avec une interface graphique.")
 
@@ -159,6 +165,9 @@ rebase = subparsers.add_parser('refonte', help="Mettre à jour l'historique des 
 fetch = subparsers.add_parser('rapporter')
 fetch.add_argument(
     '--pruneau', '-p', action='store_true', help="Enlever les branches supprimer"
+)
+fetch.add_argument(
+    '--émonder', '-e', action='store_true', help="Enlever les branches supprimer"
 )
 
 if autocomplete_installed:
