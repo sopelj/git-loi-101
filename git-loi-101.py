@@ -60,6 +60,7 @@ french_to_english_flags = {
 french_to_english_args = {
     'maître': 'master',
     'tête': 'head',
+    'origine': 'origin',
 }
 
 parser = argparse.ArgumentParser(description='Wrapper de Git en français', add_help=False)
@@ -71,18 +72,22 @@ subparsers = parser.add_subparsers(dest="commandes")
 pull = subparsers.add_parser(
     'tirer',
     help="Mettre à jour l'entrepôt local à partir d'une branche distante",
+    add_help=False
 )
 
 # Git Push
 push = subparsers.add_parser(
-    'pousser', help="Pousser les changements local ver une branche distante"
+    'pousser',
+    help="Pousser les changements local ver une branche distante",
+    add_help=False
 )
+push.add_argument('--aide', '-a', action="help")
 push.add_argument('distante', nargs='?')
 push.add_argument('branche', nargs='?')
 
 # Git Clone
 clone = subparsers.add_parser(
-    'clone', help="Cloner un entrepôt distante"
+    'clone', help="Cloner un entrepôt distante", add_help=False
 )
 clone.add_argument(
     'entrepôt', help="l'URL de l'entrepôt", metavar="ENTREPÔT"
@@ -93,29 +98,37 @@ clone.add_argument(
 
 # Git status
 status = subparsers.add_parser(
-    'statut', help="Voir l'état de l'entrepôt local"
+    'statut', help="Voir l'état de l'entrepôt local", add_help=False
 )
 
 # Git Branch
 branch = subparsers.add_parser(
-    'branche', help="Afficher les branches de l'entrepôt"
+    'branche', help="Afficher les branches de l'entrepôt", add_help=False
 )
 branch.add_argument(
     '--tout', '-t', action='store_true', help="Inclus les branches distantes"
 )
 
 # Git diff
-diff = subparsers.add_parser('différence', help="Compare deux branches")
+diff = subparsers.add_parser(
+    'différence', help="Compare deux branches", add_help=False
+)
 diff_tool = subparsers.add_parser(
-    'outil-des-différences', help="Compare deux branches"
+    'outil-des-différences', help="Compare deux branches", add_help=False
 )
 
 init = subparsers.add_parser(
-    'initialiser', help="Initialiser un entrepôt git dans le dossier actuel"
+    'initialiser',
+    help="Initialiser un entrepôt git dans le dossier actuel",
+    add_help=False
 )
-tag = subparsers.add_parser('étiqueter', help="Ajoute une étiquette sur la branche")
+tag = subparsers.add_parser(
+    'étiqueter', help="Ajoute une étiquette sur la branche", add_help=False
+)
 
-reset = subparsers.add_parser('réinitialiser', help="Réinitialiser")
+reset = subparsers.add_parser(
+    'réinitialiser', help="Réinitialiser", add_help=False
+)
 reset.add_argument(
     '--dur', '-d', action='store_true', help="Réinitialiser de manière dur"
 )
@@ -123,12 +136,12 @@ reset.add_argument(
     'cible', help="Le fichier ou la branche cible", metavar="CIBLE"
 )
 
-checkout = subparsers.add_parser('regarder-ailleurs', help="")
-show = subparsers.add_parser('afficher', help="")
-stash = subparsers.add_parser('cachette', help="")
-commit = subparsers.add_parser('commettre', help="")
+checkout = subparsers.add_parser('regarder-ailleurs', help="", add_help=False)
+show = subparsers.add_parser('afficher', help="", add_help=False)
+stash = subparsers.add_parser('cachette', help="", add_help=False)
+commit = subparsers.add_parser('commettre', help="", add_help=False)
 
-merge = subparsers.add_parser('fusion')
+merge = subparsers.add_parser('fusion', add_help=False)
 merge.add_argument(
     '--courge', '-c', action='store_true', help="Fusionner les commit ensemble."
 )
@@ -137,20 +150,29 @@ merge.add_argument(
 )
 
 
-merge_tool = subparsers.add_parser('outil-fusion', help="Gérer les conflits de fusion avec une interface graphique.")
+merge_tool = subparsers.add_parser(
+    'outil-fusion',
+    help="Gérer les conflits de fusion avec une interface graphique.",
+    add_help=False
+)
 
 # Git Cherry-Pick
-cherry_pick = subparsers.add_parser('cueillette-de-cerise', help="Prendre un commis en particulier et l'amener dans la branche actuelle.")
+cherry_pick = subparsers.add_parser(
+    'cueillette-de-cerise',
+    help="Prendre un commis en particulier et l'amener dans la branche actuelle.",
+    add_help=False
+)
 
-add = subparsers.add_parser('ajouter')
+add = subparsers.add_parser('ajouter', add_help=False)
 add.add_argument(
-    'fichiers', nargs='+', help="Le ou les fichiers à ajouter", metavar="FICHIERS"
+    'fichiers', nargs='+', help="Le ou les fichiers à ajouter",
+    metavar="FICHIERS",
 )
 add.add_argument(
     '--oblige', '-o', action='store_true', help="Oblige l'ajout de(s) fichier(s)"
 )
 
-rm = subparsers.add_parser('enlever')
+rm = subparsers.add_parser('enlever', add_help=False)
 rm.add_argument(
     'fichiers', nargs='+', help="Le ou les fichiers à supprimer", metavar="FICHIERS"
 )
@@ -161,8 +183,12 @@ rm.add_argument(
     '--récursive', '-r', action='store_true', help="Fais la suppression de manière récursive"
 )
 
-rebase = subparsers.add_parser('refonte', help="Mettre à jour l'historique des commis avec une autre branche")
-fetch = subparsers.add_parser('rapporter')
+rebase = subparsers.add_parser(
+    'refonte',
+    help="Mettre à jour l'historique des commis avec une autre branche",
+    add_help=False
+)
+fetch = subparsers.add_parser('rapporter', add_help=False)
 fetch.add_argument(
     '--pruneau', '-p', action='store_true', help="Enlever les branches supprimer"
 )
@@ -190,11 +216,13 @@ git_arguments = ['git', command]
 for key, value in iteritems(args):
     if value is True or value is False:
         flag = french_to_english_flags.get(key)
-        if flag:
+        if flag is True:
             if len(flag) == 1:
                 value = "-" + flag
             else:
                 value = "--" + flag
+        else:
+            continue
 
     if isinstance(value, list):
         if value:
